@@ -1,20 +1,17 @@
 import type { Client } from 'discord.js'
 import { createAudioResource, StreamType } from '@discordjs/voice'
+import fetch from 'node-fetch'
 import config from '../config'
+import { Readable } from 'node:stream'
+
 
 const STREAM_URL = 'https://qurango.net/radio/tarateel'
+
 
 export const ready = async (client: Client<true>): Promise<void> => {
 	console.log('Connected')
 	console.log(client.user.tag)
 
-	client.user.setPresence({
-		activities: [{
-			name: config.status,
-			type: 'LISTENING'
-		}],
-		status: 'idle'
-	})
 
 	const promises: Promise<unknown>[] = []
 	const commands = [...client.commands.values()]
@@ -25,7 +22,8 @@ export const ready = async (client: Client<true>): Promise<void> => {
 
 	await Promise.all(promises)
 
-	const resource = createAudioResource(STREAM_URL, { inputType: StreamType.Arbitrary })
+	const response = await fetch(STREAM_URL)
+	const resource = createAudioResource(Readable.from(response.body), { inputType: StreamType.Arbitrary })
 
 	client.radio.play(resource)
 }

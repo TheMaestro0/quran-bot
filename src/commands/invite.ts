@@ -1,19 +1,12 @@
-import { CTX, Command, Permissions } from 'discord.js'
+import { CTX, Command, OAuth2Scopes, PermissionFlagsBits, Permissions } from 'discord.js'
 
 export class InviteCommand implements Command {
 	name = 'invite'
 	description = 'Invite me to your server!'
 	run(ctx: CTX): Promise<unknown> {
 		const invite = ctx.client.generateInvite({
-			permissions: [
-				Permissions.FLAGS.ADD_REACTIONS,
-				Permissions.FLAGS.USE_EXTERNAL_EMOJIS,
-				Permissions.FLAGS.EMBED_LINKS,
-				Permissions.FLAGS.SPEAK,
-				Permissions.FLAGS.CONNECT,
-				Permissions.FLAGS.VIEW_CHANNEL
-			],
-			scopes: ['applications.commands']
+			permissions: PermissionFlagsBits.AddReactions | PermissionFlagsBits.UseExternalEmojis | PermissionFlagsBits.ViewChannel | PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+			scopes: [OAuth2Scopes.ApplicationsCommands]
 		})
 		return ctx.reply({ content: `[**Click Here!**](<${invite}>)`, ephemeral: true })
 	}

@@ -8,16 +8,16 @@ export const interactionCreate = async (ctx: Interaction): Promise<void> => {
 	const command = ctx.client.commands.get(ctx.commandName)
 
 	if (!command)
-		return ctx.reply({ content: 'Command not exists.', ephemeral: true })
+		return void ctx.reply({ content: 'Command not exists.', ephemeral: true })
 
 	if (!ctx.member || !(ctx.member instanceof GuildMember)) {
-		ctx.member = await ctx.guild.members.fetch(ctx.user.id)
+		ctx.member = await ctx.guild!.members.fetch(ctx.user.id)
 	}
 
-	const player = ctx.client.getPlayer(ctx.guild.id)
+	const player = ctx.client.getPlayer(ctx.guildId)
 
 	if (command.voice?.joined && !ctx.member.voice.channel) {
-		return ctx.reply({
+		return void ctx.reply({
 			content: 'Join voice/stage channel!',
 			ephemeral: true
 		})
@@ -30,16 +30,16 @@ export const interactionCreate = async (ctx: Interaction): Promise<void> => {
 					await player.connect(ctx.member.voice.channel)
 				} catch (e) {
 					console.error(e)
-					return ctx.reply({ content: 'Failed to connect...', ephemeral: true })
+					return void ctx.reply({ content: 'Failed to connect...', ephemeral: true })
 				}
 			}
 		} else {
-			return ctx.reply({ content: 'Join voice/stage channel!', ephemeral: true })
+			return void ctx.reply({ content: 'Join voice/stage channel!', ephemeral: true })
 		}
 	}
 
 	if (command.voice?.playing && !player.playing) {
-		return ctx.reply({
+		return void ctx.reply({
 			content: 'Nothing is playing.', 
 			ephemeral: true
 		})

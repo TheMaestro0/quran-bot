@@ -1,22 +1,22 @@
-import { Command, CTX, MessageActionRow, MessageButton } from 'discord.js'
+import { ActionRowBuilder, Command, CTX, ButtonBuilder, ButtonStyle, ApplicationCommandOptionType } from 'discord.js'
 import ms from 'ms'
 
 const PAGE_LIMIT = 604
-const BUTTONS = new MessageActionRow({
+const BUTTONS = new ActionRowBuilder<ButtonBuilder>({
 	components: [
-		new MessageButton()
-			.setStyle('PRIMARY')
+		new ButtonBuilder()
+			.setStyle(ButtonStyle.Primary)
 			.setCustomId('⬅️')
 			.setLabel('Back')
 			.setEmoji('⬅️'),
-		new MessageButton()
-			.setStyle('DANGER')
+		new ButtonBuilder()
+			.setStyle(ButtonStyle.Danger)
 			.setCustomId('⏹️')
 			.setLabel('Stop')
 			.setEmoji('⏹️'),
-		new MessageButton()
+		new ButtonBuilder()
 			.setCustomId('➡️')
-			.setStyle('PRIMARY')
+			.setStyle(ButtonStyle.Primary)
 			.setLabel('Next')
 			.setEmoji('➡️')
 	]
@@ -29,7 +29,7 @@ export class MushafCommand implements Command {
 	description = 'Browse Quran pages.'
 	options = [{
 		name: 'page',
-		type: 'INTEGER' as const,
+		type: ApplicationCommandOptionType.Integer as const,
 		description: 'Page number',
 		required: false
 	}]
@@ -37,7 +37,7 @@ export class MushafCommand implements Command {
 	async run(ctx: CTX): Promise<void> {
 		let page = ctx.options.getInteger('page', false) ?? 1
 
-		if (page < 0 || page > PAGE_LIMIT) return ctx.reply({
+		if (page < 0 || page > PAGE_LIMIT) return void ctx.reply({
 			content: '**Sorry, the page must be between 1 and 604.**',
 			ephemeral: true
 		})

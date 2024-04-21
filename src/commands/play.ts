@@ -1,4 +1,4 @@
-import { Command, CTX } from 'discord.js'
+import { Command, CTX, ApplicationCommandOptionType } from 'discord.js'
 import EVERYAYAH_RECITERS from '../../assets/reciters.json'
 import * as utils from '../utils'
 
@@ -12,51 +12,51 @@ export class PlayCommand implements Command {
 	description = 'Plays a surah, ayah or page from the mushaf.'
 	options = [{
 		name: 'ayah',
-		type: 'SUB_COMMAND' as const,
+		type: ApplicationCommandOptionType.Subcommand as const,
 		description: 'Plays a ayah (Example: /play ayah 1:6 hani al-rifai)',
 		options: [{
 			name: 'surah',
-			type: 'INTEGER' as const,
+			type: ApplicationCommandOptionType.Integer as const,
 			description: 'The surah number (Example: 1 for al-fatihah)',
 			required: true
 		}, {
 			name: 'ayah',
-			type: 'INTEGER' as const,
+			type: ApplicationCommandOptionType.Integer as const,
 			description: 'The ayah number',
 			required: true
 		}, {
 			name: 'reciter',
-			type: 'STRING' as const,
+			type: ApplicationCommandOptionType.String as const,
 			description: 'The reciter name',
 			required: false
 		}]
 	}, {
 		name: 'surah',
-		type: 'SUB_COMMAND' as const,
+		type: ApplicationCommandOptionType.Subcommand as const,
 		description: 'Plays a surah (Example: /play surah 1 Mishary Alafasi)',
 		options: [{
 			name: 'surah',
-			type: 'STRING' as const,
+			type: ApplicationCommandOptionType.String as const,
 			description: 'The surah number/name (Example: 1 or al-fatihah)',
 			required: true
 		}, {
 			name: 'reciter',
-			type: 'STRING' as const,
+			type: ApplicationCommandOptionType.String as const,
 			description: 'The reciter name',
 			required: false
 		}]
 	}, {
 		name: 'page',
-		type: 'SUB_COMMAND' as const,
+		type: ApplicationCommandOptionType.Subcommand as const,
 		description: 'Plays a page (Example: /play page 342 hani al-rifai)',
 		options: [{
 			name: 'page',
-			type: 'INTEGER' as const,
+			type: ApplicationCommandOptionType.Integer as const,
 			description: 'The page number',
 			required: true
 		}, {
 			name: 'reciter',
-			type: 'STRING' as const,
+			type: ApplicationCommandOptionType.String as const,
 			description: 'The reciter name',
 			required: false
 		}]

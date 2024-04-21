@@ -12,7 +12,7 @@ declare module 'discord.js' {
 		run(ctx: CTX): Awaited<void | unknown>
 	}
 
-	interface CTX extends CommandInteraction {
+	interface CTX extends ChatInputCommandInteraction {
 		guild: Guild
 		channel: TextChannel | NewsChannel
 		member: GuildMember

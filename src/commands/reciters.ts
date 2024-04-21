@@ -1,20 +1,20 @@
 import { getReciters } from '../utils'
-import { Command, CTX, MessageActionRow, MessageButton } from 'discord.js'
+import { Command, CTX, ActionRowBuilder, ButtonBuilder, ButtonStyle, ApplicationCommandOptionType } from 'discord.js'
 import arabic2franko from 'arabic2franko'
 import Fuse from 'fuse.js'
 import ms from 'ms'
 
 const isArabic = (str: string) => /^[\u0621-\u064A0-9 ]+$/i.test(str)
-const BUTTONS = new MessageActionRow({
+const BUTTONS = new ActionRowBuilder<ButtonBuilder>({
 	components: [
-		new MessageButton()
-			.setStyle('PRIMARY')
+		new ButtonBuilder()
+			.setStyle(ButtonStyle.Primary)
 			.setCustomId('⬅️')
 			.setLabel('Back')
 			.setEmoji('⬅️'),
-		new MessageButton()
+		new ButtonBuilder()
 			.setCustomId('➡️')
-			.setStyle('PRIMARY')
+			.setStyle(ButtonStyle.Primary)
 			.setLabel('Next')
 			.setEmoji('➡️')
 	]
@@ -25,7 +25,7 @@ export class RecitersCommand implements Command {
 	description = 'Sends the lists of reciters for `/play`.'
 	options = [{
 		name: 'for',
-		type: 'STRING' as const,
+		type: ApplicationCommandOptionType.String as const,
 		description: 'Reciters for?',
 		choices: [{
 			name: 'ayah',
@@ -40,7 +40,7 @@ export class RecitersCommand implements Command {
 		required: true
 	}, {
 		name: 'name',
-		type: 'STRING' as const,
+		type: ApplicationCommandOptionType.String as const,
 		description: 'Reciter name',
 		required: false
 	}]

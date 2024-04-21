@@ -47,4 +47,4 @@ export class Client extends DiscordClient {
 	}
 }
 
-export { Intents } from 'discord.js'
+export { GatewayIntentBits as Intents } from 'discord.js'

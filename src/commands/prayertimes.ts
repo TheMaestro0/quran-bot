@@ -1,4 +1,4 @@
-import { CTX, Command, MessageEmbed } from 'discord.js'
+import { CTX, Command, EmbedBuilder, ApplicationCommandOptionType } from 'discord.js'
 import { getPrayerTimes } from '../utils'
 
 export class PrayerTimesCommand implements Command {
@@ -6,12 +6,12 @@ export class PrayerTimesCommand implements Command {
 	description = 'Gets prayer times for a specified location.'
 	options = [{
 		name: 'address',
-		type: 'STRING' as const,
+		type: ApplicationCommandOptionType.String as const,
 		description: 'location name',
 		required: true
 	}, {
 		name: 'method',
-		type: 'INTEGER' as const,
+		type: ApplicationCommandOptionType.Integer as const,
 		description: 'A prayer times calculation method. (default: Egyptian General Authority of Survey)',
 		required: false,
 		choices: [{
@@ -59,7 +59,7 @@ export class PrayerTimesCommand implements Command {
 		}]
 	}, {
 		name: 'school',
-		type: 'INTEGER' as const,
+		type: ApplicationCommandOptionType.Integer as const,
 		description: 'Shafi or Hanafi (If you leave this empty, it defaults to Shafii.)',
 		required: false,
 		choices: [{
@@ -78,8 +78,8 @@ export class PrayerTimesCommand implements Command {
 		const method = ctx.options.getInteger('method', false) ?? 5
 		const school = ctx.options.getInteger('school', false) ?? 0
 
-		const embed = new MessageEmbed()
-			.setAuthor('Prayer Times for ' + location)
+		const embed = new EmbedBuilder()
+			.setAuthor({ name: 'Prayer Times for ' + location })
 			.setColor('#2f3136')
 
 		try {
@@ -94,15 +94,21 @@ export class PrayerTimesCommand implements Command {
 				midnight
 			} = await getPrayerTimes(location, method, school)
 
-			embed
-				.addField('**Imsak (إِمْسَاك)**', imsak, true)
-				.addField('**Fajr (صلاة الفجر)**', fajr, true)
-				.addField('**Sunrise (طلوع الشمس)**', sunrise, true)
-				.addField('**Ẓuhr (صلاة الظهر)**', dhuhr, true)
-				.addField('**Asr (صلاة العصر)**', asr, true)
-				.addField('**Maghrib (صلاة المغرب)**', maghrib, true)
-				.addField('**Isha (صلاة العشاء)**', isha, true)
-				.addField('**Midnight (منتصف الليل)**', midnight, true)
+			const fields = [
+				['**Imsak (إِمْسَاك)**', imsak],
+				['**Fajr (صلاة الفجر)**', fajr],
+				['**Sunrise (طلوع الشمس)**', sunrise],
+				['**Ẓuhr (صلاة الظهر)**', dhuhr],
+				['**Asr (صلاة العصر)**', asr],
+				['**Maghrib (صلاة المغرب)**', maghrib],
+				['**Isha (صلاة العشاء)**', isha],
+				['**Midnight (منتصف الليل)**', midnight]
+			]
+
+			for (const [name, value] of fields) {
+				embed.addFields({ name, value, inline: true })
+			}
+
 
 			return ctx.followUp({ embeds: [embed] })
 		} catch {

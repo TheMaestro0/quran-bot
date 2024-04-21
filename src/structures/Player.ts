@@ -4,6 +4,8 @@ import {
 } from '@discordjs/voice'
 import type { StageChannel, VoiceChannel } from 'discord.js'
 import { setTimeout } from 'timers/promises'
+import { Readable } from 'node:stream'
+import fetch from 'node-fetch'
 
 export function handleConnectionStatus(connection: VoiceConnection) {
 	let readyLock = false
@@ -64,7 +66,8 @@ export class Player {
 		if (!this.connected) throw new Error('No Connection...')
 
 		try {
-			const resource = createAudioResource(url, { inputType: StreamType.Arbitrary })
+			const res = await fetch(url)
+			const resource = createAudioResource(Readable.from(res.body), { inputType: StreamType.Arbitrary })
 			this.audioPlayer.play(resource)
 			this.connection!.subscribe(this.audioPlayer)
 		} catch (error) {
